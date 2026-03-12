@@ -39,6 +39,7 @@ import ViewServiceBookings from "./pages/ViewServiceBookings"; // Import ViewSer
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 import ContactUs from "./ContactUs";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -95,7 +96,7 @@ function App() {
   return (
     <>
       {/* Toast Container */}
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -105,7 +106,8 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
+       <Toaster position="top-right" />
       <Router>
         {loading && <Loader />}
         <ConditionalNavbar />

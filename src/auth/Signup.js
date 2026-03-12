@@ -6,9 +6,16 @@ import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import TermsAndConditions from "../legal/terms&conditions";
 import PrivacyPolicy from "../legal/privacy policy";
 import harrierImage from "../pages/images/Harrier.png";
+import toast from "react-hot-toast";
 
 function Signup() {
-  const [mydata, myDataUpdate] = React.useState({});
+  const [mydata, myDataUpdate] = React.useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+  });
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
@@ -18,18 +25,34 @@ function Signup() {
   const validate = () => {
     const newErrors = {};
 
-    if (!mydata.name) newErrors.name = "Name is required";
-    if (!mydata.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(mydata.email))
-      newErrors.email = "Email format is invalid";
+    if (!mydata.name) {
+      newErrors.name = "Name is required";
+      toast.error("Name is required");
+    }
 
-    if (!mydata.mobile) newErrors.mobile = "Mobile number is required";
-    else if (!/^\d{10}$/.test(mydata.mobile))
-      newErrors.mobile = "Mobile number should be 10 digits";
+    if (!mydata.email) {
+      newErrors.email = "Email is required";
+      toast.error("Email is required");
+    } else if (!/\S+@\S+\.\S+/.test(mydata.email)) {
+      newErrors.email = "Invalid email format";
+      toast.error("Invalid email format");
+    }
 
-    if (!mydata.password) newErrors.password = "Password is required";
-    else if (mydata.password.length < 6)
-      newErrors.password = "Password should be at least 6 characters";
+    if (!mydata.mobile) {
+      newErrors.mobile = "Mobile number is required";
+      toast.error("Mobile number is required");
+    } else if (!/^\d{10}$/.test(mydata.mobile)) {
+      newErrors.mobile = "Mobile must be 10 digits";
+      toast.error("Mobile number must be 10 digits");
+    }
+
+    if (!mydata.password) {
+      newErrors.password = "Password is required";
+      toast.error("Password is required");
+    } else if (mydata.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+      toast.error("Password must be at least 6 characters");
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -65,13 +88,18 @@ function Signup() {
 
     axios
       .post(`${API_BASE_URL}/register`, data)
-      .then(function (response) {
+      .then((response) => {
         const msg = response.data.message;
-        alert(msg);
-        window.location = "/login";
+
+        toast.success(msg || "Account created successfully 🎉");
+
+        setTimeout(() => {
+          window.location = "/login";
+        }, 1500);
       })
-      .catch(function (error) {
-        console.error("There was an error!", error);
+      .catch((error) => {
+        console.error(error);
+        toast.error("Registration failed. Please try again.");
       });
   };
 
